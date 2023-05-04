@@ -60,6 +60,19 @@ function analyzeSeo() {
       })
       .catch(() => false);
   }
+  function checkRobotsTxt() {
+    const url = new URL(window.location.href);
+    const robotsTxtUrl = `${url.protocol}//${url.host}/robots.txt`;
+
+    return fetch(robotsTxtUrl)
+      .then((response) => {
+        if (response.status >= 200 && response.status < 300) {
+          return true;
+        }
+        return false;
+      })
+      .catch(() => false);
+  }
 
   function checkCdn() {
     const cdnDomains = [
@@ -85,10 +98,11 @@ function analyzeSeo() {
     });
   }
 
-  Promise.all([
+ Promise.all([
     getTitle(),
     getMetaDescription(),
     getPageLoadTime(),
+    checkRobotsTxt(),
     checkSchema(),
     checkHttps(),
     checkDoctype(),
@@ -110,6 +124,7 @@ function analyzeSeo() {
       brokenLinks,
       compression,
       cdn,
+      robotsTxt,
     ] = results;
 
     chrome.runtime.sendMessage({
@@ -134,6 +149,7 @@ function analyzeSeo() {
         brokenLinks: brokenLinks,
         compression: compression,
         cdn: cdn,
+        robotsTxt: robotsTxt,
       },
     });
   });
