@@ -50,6 +50,7 @@ function displayResults(results) {
             compression: "Compression (Gzip/Brotli)",
             cdn: "Utilisation d'un CDN",
             robotsTxt: "Fichier robots.txt",
+            sitemap: "Fichier sitemap.xml",
           }[key];
           const value = key === "pageLoadTime" ? `${result.value} ms` : checkOrCross(result.present || result);
           const col = createResultItem(labelText, value);

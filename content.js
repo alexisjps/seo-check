@@ -61,15 +61,35 @@ function analyzeSeo() {
       .catch(() => false);
   }
   function checkRobotsTxt() {
-    const url = new URL(window.location.href);
-    const robotsTxtUrl = `${url.protocol}//${url.host}/robots.txt`;
+    return new Promise((resolve) => {
+      const url = new URL(window.location.href);
+      const robotsTxtUrl = `${url.protocol}//${url.host}/robots.txt`;
 
-    return fetch(robotsTxtUrl)
-      .then((response) => {
-        if (response.status >= 200 && response.status < 300) {
-          return true;
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', robotsTxtUrl, true);
+
+      xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          resolve(true);
+        } else {
+          resolve(false);
         }
-        return false;
+      };
+
+      xhr.onerror = function () {
+        resolve(false);
+      };
+
+      xhr.send(null);
+    });
+  }
+
+  function checkSitemap() {
+    const sitemapUrl = `${window.location.origin}/sitemap.xml`;
+  
+    return fetch(sitemapUrl)
+      .then((response) => {
+        return response.status >= 200 && response.status < 400;
       })
       .catch(() => false);
   }
@@ -111,6 +131,7 @@ function analyzeSeo() {
     getBrokenLinks(),
     checkCompression(),
     checkCdn(),
+    checkSitemap(),
   ]).then((results) => {
     const [
       title,
@@ -125,6 +146,7 @@ function analyzeSeo() {
       compression,
       cdn,
       robotsTxt,
+      sitemap,
     ] = results;
 
     chrome.runtime.sendMessage({
@@ -150,6 +172,7 @@ function analyzeSeo() {
         compression: compression,
         cdn: cdn,
         robotsTxt: robotsTxt,
+        sitemap: sitemap,
       },
     });
   });
