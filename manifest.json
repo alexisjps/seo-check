@@ -10,7 +10,6 @@
   },
   "permissions": [
     "activeTab"
-    // "webRequest"
   ],
   "content_scripts": [
     {
