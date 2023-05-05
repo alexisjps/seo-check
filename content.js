@@ -60,29 +60,29 @@ function analyzeSeo() {
       })
       .catch(() => false);
   }
-  function checkRobotsTxt() {
-    return new Promise((resolve) => {
-      const url = new URL(window.location.href);
-      const robotsTxtUrl = `${url.protocol}//${url.host}/robots.txt`;
+  // function checkRobotsTxt() {
+  //   return new Promise((resolve) => {
+  //     const url = new URL(window.location.href);
+  //     const robotsTxtUrl = `${url.protocol}//${url.host}/robots.txt`;
 
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', robotsTxtUrl, true);
+  //     const xhr = new XMLHttpRequest();
+  //     xhr.open('GET', robotsTxtUrl, true);
 
-      xhr.onload = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-          resolve(true);
-        } else {
-          resolve(false);
-        }
-      };
+  //     xhr.onload = function () {
+  //       if (xhr.readyState === 4 && xhr.status === 200) {
+  //         resolve(true);
+  //       } else {
+  //         resolve(false);
+  //       }
+  //     };
 
-      xhr.onerror = function () {
-        resolve(false);
-      };
+  //     xhr.onerror = function () {
+  //       resolve(false);
+  //     };
 
-      xhr.send(null);
-    });
-  }
+  //     xhr.send(null);
+  //   });
+  // }
 
   function checkSitemap() {
     const sitemapUrl = `${window.location.origin}/sitemap.xml`;

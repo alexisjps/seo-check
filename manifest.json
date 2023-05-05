@@ -9,8 +9,8 @@
     }
   },
   "permissions": [
-    "activeTab",
-    "webRequest"
+    "activeTab"
+    // "webRequest"
   ],
   "content_scripts": [
     {
