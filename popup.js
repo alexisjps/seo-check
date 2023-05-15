@@ -18,9 +18,10 @@ sendMessageToContentScript();
 
 function displayResults(results) {
   const loadingElement = document.getElementById("loading");
-  loadingElement.style.display = "none";
-  
+  loadingElement.style.display = "none"; // Cacher le spinner
+
   const resultsContainer = document.getElementById("results-container");
+  resultsContainer.style.display = "block"; // Afficher les résultats
   
   const numberOfRows = Math.ceil(Object.keys(results).length / 3);
 
@@ -91,5 +92,6 @@ function createResultItem(label, result) {
   cardBody.appendChild(cardResult);
   card.appendChild(cardBody);
   col.appendChild(card);
+
   return col;
 }
