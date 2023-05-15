@@ -1,5 +1,8 @@
+let resultsReady = false;
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "seo_results") {
+    resultsReady = true;
     displayResults(request.data);
   }
 });
@@ -12,16 +15,31 @@ function sendMessageToContentScript() {
       chrome.tabs.sendMessage(tabs[0].id, { action: "analyze_seo" });
     }
   });
+
+  const progressBar = document.getElementById('progress-bar');
+  let progress = 0;
+  const intervalId = setInterval(() => {
+    if (progress < 100 && !resultsReady) {
+      progress += 3.33;  // 100% in 30 seconds
+      progressBar.style.width = `${progress}%`;
+    } else {
+      clearInterval(intervalId);
+      if(resultsReady){
+        const loadingElement = document.getElementById("loading");
+        loadingElement.style.display = "none";
+      }
+    }
+  }, 1000);
 }
 
 sendMessageToContentScript();
 
 function displayResults(results) {
   const loadingElement = document.getElementById("loading");
-  loadingElement.style.display = "none"; // Cacher le spinner
+  loadingElement.style.display = "none";
 
   const resultsContainer = document.getElementById("results-container");
-  resultsContainer.style.display = "block"; // Afficher les résultats
+  resultsContainer.style.display = "block";
   
   const numberOfRows = Math.ceil(Object.keys(results).length / 3);
 
@@ -73,7 +91,7 @@ function checkOrCross(condition) {
 
 function createResultItem(label, result) {
   const col = document.createElement("div");
-  col.classList.add("col-12", "col-md-6", "col-lg-6", "mb-3");
+  col.classList.add("col-12", "col-md-4", "col-lg-4", "mb-3");
 
   const card = document.createElement("div");
   card.classList.add("card", "shadow", "h-100", "result-item");
