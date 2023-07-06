@@ -7,37 +7,37 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 function analyzeSeo() {
   function getTitle() {
     const titleElement = document.querySelector("head title");
-    return titleElement ? titleElement.textContent : "";
+    return Promise.resolve(titleElement ? titleElement.textContent : "");
   }
 
   function getMetaDescription() {
     const descriptionElement = document.querySelector('head meta[name="description"]');
-    return descriptionElement ? descriptionElement.content : "";
+    return Promise.resolve(descriptionElement ? descriptionElement.content : "");
   }
 
   function getPageLoadTime() {
     const performanceTiming = window.performance.timing;
-    return performanceTiming.loadEventEnd - performanceTiming.navigationStart;
+    return Promise.resolve(performanceTiming.loadEventEnd - performanceTiming.navigationStart);
   }
 
   function checkSchema() {
-    return !!document.querySelector('script[type="application/ld+json"]');
+    return Promise.resolve(!!document.querySelector('script[type="application/ld+json"]'));
   }
 
   function checkHttps() {
-    return window.location.protocol === "https:";
+    return Promise.resolve(window.location.protocol === "https:");
   }
 
   function checkDoctype() {
-    return document.doctype !== null;
+    return Promise.resolve(document.doctype !== null);
   }
 
   function checkLangAttribute() {
-    return document.documentElement.lang !== "";
+    return Promise.resolve(document.documentElement.lang !== "");
   }
 
   function getImagesWithoutAlt() {
-    return Array.from(document.getElementsByTagName("img")).filter((img) => !img.hasAttribute("alt")).length;
+    return Promise.resolve(Array.from(document.getElementsByTagName("img")).filter((img) => !img.hasAttribute("alt")).length);
   }
 
   function getBrokenLinks() {
@@ -60,6 +60,7 @@ function analyzeSeo() {
       })
       .catch(() => false);
   }
+
   function checkRobotsTxt() {
     return new Promise((resolve) => {
       const url = new URL(window.location.href);
@@ -118,7 +119,7 @@ function analyzeSeo() {
     });
   }
 
- Promise.all([
+  Promise.all([
     getTitle(),
     getMetaDescription(),
     getPageLoadTime(),
@@ -177,4 +178,3 @@ function analyzeSeo() {
     });
   });
 }
-

@@ -11,8 +11,17 @@ function sendMessageToContentScript() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs.length === 0) {
       setTimeout(sendMessageToContentScript, 100);
-    } else {
-      chrome.tabs.sendMessage(tabs[0].id, { action: "analyze_seo" });
+      return;
+    }
+    
+    try {
+      chrome.tabs.sendMessage(tabs[0].id, { action: "analyze_seo" }, response => {
+        if (chrome.runtime.lastError) {
+          setTimeout(sendMessageToContentScript, 100);
+        }
+      });
+    } catch (e) {
+      setTimeout(sendMessageToContentScript, 100);
     }
   });
 
